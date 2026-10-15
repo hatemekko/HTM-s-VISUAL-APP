@@ -1,0 +1,254 @@
+{
+  "title": "Espaces de travail",
+  "subtitle": "Une visite architecturale · Hatem Ellouze",
+  "cameras": [
+    {
+      "id": "ID1",
+      "name": "Last_Saved_SketchUp_View",
+      "position": [
+        29.4729408,
+        15.75963066,
+        -27.8970994
+      ],
+      "target": [
+        27.219279,
+        14.07921996,
+        -28.944586299999997
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID2",
+      "name": "Scène_1",
+      "position": [
+        7.47668558,
+        1.014142752,
+        -30.0322742
+      ],
+      "target": [
+        7.4956030369999995,
+        1.014142752,
+        -33.0322145
+      ],
+      "fov": 35.0
+    },
+    {
+      "id": "ID3",
+      "name": "Scène_2",
+      "position": [
+        3.75162826,
+        1.4183215219999998,
+        -33.3504286
+      ],
+      "target": [
+        2.52183556,
+        1.4183215219999998,
+        -36.0867784
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID4",
+      "name": "Scène_8",
+      "position": [
+        2.55732026,
+        1.212647816,
+        -43.9147966
+      ],
+      "target": [
+        3.08434916,
+        1.212647816,
+        -40.9614526
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID5",
+      "name": "Scène_3",
+      "position": [
+        11.23112308,
+        1.3312300019999999,
+        -35.214280599999995
+      ],
+      "target": [
+        9.163901379999999,
+        1.3312300019999999,
+        -37.3883539
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID6",
+      "name": "Scène_4",
+      "position": [
+        11.08505276,
+        1.163736052,
+        -42.9185832
+      ],
+      "target": [
+        13.258482260000001,
+        1.163736052,
+        -44.9864817
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID7",
+      "name": "Scène_5",
+      "position": [
+        11.17063552,
+        1.260830092,
+        -49.505057199999996
+      ],
+      "target": [
+        13.33748542,
+        1.260830092,
+        -47.430265299999995
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID8",
+      "name": "Scène_11",
+      "position": [
+        11.16372672,
+        1.0060881579999998,
+        -46.153806599999996
+      ],
+      "target": [
+        13.04388732,
+        0.9833724069999998,
+        -43.8161838
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID9",
+      "name": "Scène_6",
+      "position": [
+        10.82884296,
+        4.01152614,
+        -49.8337586
+      ],
+      "target": [
+        13.06451826,
+        4.01152614,
+        -47.8333196
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID10",
+      "name": "Scène_7",
+      "position": [
+        10.271800639999999,
+        3.6206277599999996,
+        -50.1559576
+      ],
+      "target": [
+        7.5648157399999985,
+        3.6206277599999996,
+        -48.8628088
+      ],
+      "fov": 76.90971
+    },
+    {
+      "id": "ID11",
+      "name": "Scène_9",
+      "position": [
+        16.9725721,
+        11.82815262,
+        -48.7375962
+      ],
+      "target": [
+        15.222583,
+        9.635964119999999,
+        -47.6737128
+      ],
+      "fov": 50.0
+    },
+    {
+      "id": "ID12",
+      "name": "Scène_10",
+      "position": [
+        -0.136739249,
+        30.4138584,
+        -30.2235616
+      ],
+      "target": [
+        0.587637151,
+        27.748019399999997,
+        -31.3934251
+      ],
+      "fov": 50.0
+    }
+  ],
+  "views": [
+    {
+      "id": "vue_01",
+      "title": "Atrium chaleureux avec escalier flottant",
+      "image": "images/vue_01.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_02",
+      "title": "Bureau moderne aux cloisons vitrées",
+      "image": "images/vue_02.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_03",
+      "title": "Bureau moderne en coupe axonométrique",
+      "image": "images/vue_03.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_04",
+      "title": "Couloir de bureau avec espace café",
+      "image": "images/vue_04.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_05",
+      "title": "Couloir de bureau moderne vitré",
+      "image": "images/vue_05.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_06",
+      "title": "Couloir moderne et chandelier sculptural",
+      "image": "images/vue_06.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_07",
+      "title": "Gemini_Generated_Image_onjzedonjzedonjz",
+      "image": "images/vue_07.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_08",
+      "title": "Hall moderne avec escalier flottant",
+      "image": "images/vue_08.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_09",
+      "title": "Hall moderne avec escalier suspendu",
+      "image": "images/vue_09.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_10",
+      "title": "Intérieur moderne chaleureux avec cuisine ouverte",
+      "image": "images/vue_10.jpg",
+      "camera_id": null
+    },
+    {
+      "id": "vue_11",
+      "title": "Salon contemporain aux œuvres abstraites",
+      "image": "images/vue_11.jpg",
+      "camera_id": null
+    }
+  ]
+}

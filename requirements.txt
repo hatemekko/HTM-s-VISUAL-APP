@@ -1,0 +1,7 @@
+streamlit==1.66.0
+trimesh>=4.6,<5
+pycollada>=0.9,<1
+numpy>=1.26,<3
+Pillow>=10,<13
+boto3>=1.35,<2
+fast-simplification>=0.1.9,<1
