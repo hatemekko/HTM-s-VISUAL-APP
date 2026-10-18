@@ -1,158 +1,111 @@
 from pathlib import Path
-import os, json, time, hmac, base64, uuid, io, threading
+import os,json,time,hmac,uuid,io,zipfile,copy,math
 import streamlit as st
 import streamlit.components.v1 as components
 from PIL import Image
-from core import convert_model, snapshot, atomic_write, extract_zip
-
+from pack import html
 BASE=Path(__file__).parent
 ROOT=Path(os.environ.get('PROJECT_DATA_DIR',str(BASE/'data')))
 ROOT.mkdir(parents=True,exist_ok=True)
 st.set_page_config(page_title='Parcours · Hatem Ellouze',page_icon='◈',layout='wide')
-
-def secret(k,default=''):
-    if os.environ.get(k):return os.environ[k]
-    try:return st.secrets.get(k,default)
-    except FileNotFoundError:return default
-
-@st.cache_resource
-def lock():return threading.RLock()
-
-def s3_client():
-    import boto3
-    return boto3.client('s3',endpoint_url=secret('S3_ENDPOINT') or None,aws_access_key_id=secret('S3_ACCESS_KEY'),aws_secret_access_key=secret('S3_SECRET_KEY'),region_name=secret('S3_REGION','auto'))
-
-@st.cache_resource
-def restore_cloud():
-    if secret('S3_BUCKET'):
-        from botocore.exceptions import ClientError
-        try:
-            response=s3_client().get_object(Bucket=secret('S3_BUCKET'),Key=secret('S3_KEY','parcours/project.zip'))
-            with lock():extract_zip(response['Body'].read(),ROOT)
-        except ClientError as e:
-            if e.response['Error']['Code'] not in ('NoSuchKey','404'):raise
-    return True
-
-try:restore_cloud()
-except Exception:
-    st.error('Impossible de lire le stockage distant. Vérifiez sa configuration avant de modifier le projet.');st.stop()
-
-def project():
-    p=ROOT/'project.json'
-    return json.loads(p.read_text()) if p.exists() else {'title':'Mon projet','subtitle':'Visite architecturale','cameras':[],'views':[]}
-
+st.markdown('<style>.block-container{padding-top:1rem;padding-bottom:0}header[data-testid="stHeader"]{background:transparent}.stApp{background:#171a14;color:#eee}h1{font-family:Georgia,serif}</style>',unsafe_allow_html=True)
+def read():return json.loads((ROOT/'tour.json').read_text())
 def authorized():return time.time()<st.session_state.get('admin_until',0)
 def require_admin():
-    if not authorized():raise PermissionError('Connexion administrateur requise.')
+    if not authorized():raise PermissionError('Connexion requise')
 def save(p):
+    require_admin();tmp=ROOT/'tour.tmp';tmp.write_text(json.dumps(p,ensure_ascii=False,indent=2));tmp.replace(ROOT/'tour.json')
+def img_write(upload,folder,panorama=False):
     require_admin()
-    with lock():
-        atomic_write(ROOT/'project.json',json.dumps(p,ensure_ascii=False,indent=2).encode())
-        if secret('S3_BUCKET'):
-            try:s3_client().put_object(Bucket=secret('S3_BUCKET'),Key=secret('S3_KEY','parcours/project.zip'),Body=snapshot(ROOT),ContentType='application/zip')
-            except Exception:
-                st.error('Enregistré localement, mais sauvegarde distante échouée. Téléchargez votre sauvegarde avant de quitter.');return False
-    st.success('Projet enregistré. Les visiteurs le verront après actualisation.');return True
-
-st.markdown('''<style>.stApp{background:#f5f2ec}header[data-testid="stHeader"]{background:#f5f2ec}h1{font-family:Georgia,serif!important;font-weight:400!important}div[data-testid="stSidebar"]{background:#e9e4da}.block-container{padding-top:2rem}div.stButton>button{border-radius:24px}</style>''',unsafe_allow_html=True)
+    if upload.size>25*1024*1024:raise ValueError('Image limitée à 25 Mo.')
+    im=Image.open(upload);im.load()
+    if panorama and abs(im.width/im.height-2)>.05:raise ValueError('Un panorama équirectangulaire doit avoir un rapport 2:1.')
+    im=im.convert('RGB');im.thumbnail((4096,2048) if panorama else (2400,2400))
+    rel=f'{folder}/{uuid.uuid4().hex}.jpg';path=ROOT/rel;path.parent.mkdir(exist_ok=True);im.save(path,quality=93);return rel
+def backup():
+    out=io.BytesIO()
+    with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+        for f in ROOT.rglob('*'):
+            if f.is_file():z.write(f,f.relative_to(ROOT))
+    return out.getvalue()
 with st.sidebar:
     st.caption('HATEM ELLOUZE · ARCHITECTURE')
-    page=st.radio('Espace',['Visite','Administration'])
-    st.divider();st.caption('Une maquette à explorer. Des ambiances à découvrir.')
-p=project()
-if page=='Administration':
-    st.title('Atelier du projet')
-    pwd=secret('ADMIN_PASSWORD')
-    if len(pwd)<12:
-        st.info('Configurez ADMIN_PASSWORD (au moins 12 caractères) dans les secrets Streamlit pour activer l’administration. Aucun mot de passe par défaut.');st.stop()
-    if not authorized():
-        with st.form('login'):
-            entered=st.text_input('Mot de passe administrateur',type='password')
-            submit=st.form_submit_button('Se connecter')
-        if submit:
-            if time.time()<st.session_state.get('retry_after',0):st.error('Veuillez patienter avant de réessayer.')
-            elif hmac.compare_digest(entered.encode(),pwd.encode()):
-                st.session_state.admin_until=time.time()+1800;st.rerun()
-            else:
-                st.session_state.retry_after=time.time()+3;st.error('Mot de passe incorrect.')
-        st.stop()
-    if st.button('Se déconnecter'):st.session_state.admin_until=0;st.rerun()
-    st.caption('Session de 30 minutes. Seul cet espace permet de modifier le projet.')
-    if not secret('S3_BUCKET'):st.warning('Stockage local actif. Sur Streamlit Cloud, téléchargez une sauvegarde après vos changements : les fichiers importés peuvent disparaître au redémarrage. Configurez S3 pour une conservation automatique durable (guide inclus).')
-    a,b,c,d=st.tabs(['Présentation','Maquette','Rendus et positions','Sauvegarde'])
-    with a:
-        with st.form('presentation'):
-            title=st.text_input('Nom du projet',p['title']);sub=st.text_input('Sous-titre',p.get('subtitle',''))
-            if st.form_submit_button('Enregistrer la présentation'):
-                p.update(title=title,subtitle=sub);save(p)
-    with b:
-        st.write('Importez un **GLB**, un **DAE**, ou un **ZIP contenant un DAE et ses textures**. Le DAE est converti en maquette légère avec couleurs simplifiées ; le GLB conserve ses matériaux.')
-        st.caption('Le fichier .skp seul n’est pas lisible par le navigateur. Exportez-le depuis SketchUp. Limite : 200 Mo par fichier, 350 Mo décompressés.')
-        model=st.file_uploader('Maquette pour la visite',type=['dae','glb','zip'])
-        if st.button('Importer et remplacer la maquette',disabled=model is None):
-            require_admin()
+    mode=st.radio('Espace',['Visite','Administration'])
+p=read()
+if mode=='Visite':
+    components.html(html(p,ROOT),height=850,scrolling=False)
+    st.stop()
+st.title('Administration de la visite')
+try:pwd=os.environ.get('ADMIN_PASSWORD') or st.secrets.get('ADMIN_PASSWORD','')
+except FileNotFoundError:pwd=''
+if len(pwd)<12:
+    st.info('Définissez ADMIN_PASSWORD avec au moins 12 caractères dans les secrets Streamlit pour activer cet espace. Aucun mot de passe n’est inclus dans la visite.');st.stop()
+if not authorized():
+    with st.form('login'):
+        typed=st.text_input('Mot de passe',type='password');submit=st.form_submit_button('Se connecter')
+    if submit:
+        if time.time()<st.session_state.get('retry_after',0):st.error('Patientez quelques secondes.')
+        elif hmac.compare_digest(typed.encode(),pwd.encode()):st.session_state.admin_until=time.time()+1800;st.rerun()
+        else:st.session_state.retry_after=time.time()+5;st.error('Mot de passe incorrect.')
+    st.stop()
+if st.button('Se déconnecter'):st.session_state.admin_until=0;st.rerun()
+st.caption('Session de 30 minutes. Les visiteurs ne peuvent pas modifier la visite.')
+st.info('Après une modification, téléchargez la sauvegarde et remplacez le dossier data/ de votre dépôt GitHub. Le disque Streamlit Cloud n’est pas un stockage permanent.')
+a,b,c,d,e=st.tabs(['Panoramas','Passages','Axonométries','Sources SketchUp','Exporter'])
+with a:
+    selected=st.selectbox('Point de vue',range(len(p['scenes'])),format_func=lambda i:p['scenes'][i]['title']);s=p['scenes'][selected]
+    with st.form('scene'):
+        title=st.text_input('Nom',s['title']);level=st.text_input('Niveau',s['level']);start=st.checkbox('Commencer la visite ici',p['start']==s['id']);upload=st.file_uploader('Remplacer le panorama 360° (2:1)',type=['png','jpg','jpeg'])
+        if st.form_submit_button('Enregistrer'):
             try:
-                with st.spinner('Conversion et optimisation de la maquette…'):
-                    blob,cams=convert_model(model.getvalue(),model.name)
-                    with lock():
-                        require_admin();atomic_write(ROOT/'model.glb',blob);p['cameras']=cams
-                        for v in p['views']:v['camera_id']=None
-                        save(p)
-                st.info(f'{len(cams)} caméras importées. Associez à nouveau les rendus aux caméras dans le troisième onglet.')
-            except Exception as e:st.error(f'Import impossible : {str(e)[:250]}')
-        skp=st.file_uploader('Source SketchUp à conserver (facultatif, non affichée)',type=['skp'])
-        if st.button('Conserver le fichier source',disabled=skp is None):
-            require_admin();atomic_write(ROOT/'source.skp',skp.getvalue());save(p)
-    with c:
-        st.write('Les rendus sont déjà intégrés. Leur association aux caméras est à vérifier : aucun emplacement n’a été deviné.')
-        files=st.file_uploader('Ajouter des rendus',type=['jpg','jpeg','png'],accept_multiple_files=True)
-        if st.button('Ajouter les images',disabled=not files):
-            require_admin()
+                if upload:s['image']=img_write(upload,'panoramas',True);s.pop('thumbnail',None)
+                s.update(title=title,level=level)
+                if start:p['start']=s['id']
+                save(p);st.success('Enregistré');st.rerun()
+            except Exception as ex:st.error(str(ex))
+    with st.expander('Ajouter un panorama'):
+        with st.form('new'):
+            title=st.text_input('Nom du nouvel espace');level=st.selectbox('Niveau du nouvel espace',['Rez-de-chaussée','Étage']);upload=st.file_uploader('Nouveau panorama 2:1',type=['png','jpg','jpeg'])
+            if st.form_submit_button('Ajouter'):
+                try:
+                    if not upload or not title:raise ValueError('Indiquez un nom et une image.')
+                    rel=img_write(upload,'panoramas',True);p['scenes'].append(dict(id=uuid.uuid4().hex,title=title,level=level,image=rel,heading=0,links=[]));save(p);st.rerun()
+                except Exception as ex:st.error(str(ex))
+with b:
+    ids=[s['id'] for s in p['scenes']];names={s['id']:s['title'] for s in p['scenes']}
+    origin=st.selectbox('Depuis quel panorama ?',ids,format_func=lambda x:names[x]);scene=next(s for s in p['scenes'] if s['id']==origin)
+    st.write('Tournez la vue pour placer le passage au centre. Copiez les coordonnées affichées, puis choisissez la destination. Ajoutez aussi le passage de retour depuis l’autre vue.')
+    components.html(html(p,ROOT,editor=True,start=origin),height=560)
+    with st.form('link'):
+        dest=st.selectbox('Destination',[i for i in ids if i!=origin],format_func=lambda x:names[x]);coords=st.text_input('Coordonnées copiées',value='{"yaw":0,"pitch":-0.2}');label=st.text_input('Libellé du repère (facultatif)');kind=st.selectbox('Type de passage',['Passage','Monter','Descendre'])
+        if st.form_submit_button('Ajouter ou remplacer ce passage'):
             try:
-                for f in files:
-                    im=Image.open(f);im.verify();im=Image.open(f).convert('RGB');im.thumbnail((2000,2000));out=io.BytesIO();im.save(out,format='JPEG',quality=90)
-                    uid=uuid.uuid4().hex;rel=f'images/{uid}.jpg';atomic_write(ROOT/rel,out.getvalue());p['views'].append({'id':uid,'title':Path(f.name).stem,'image':rel,'camera_id':None})
-                save(p);st.rerun()
-            except Exception as e:st.error(f'Image non valide : {str(e)[:150]}')
-        if p['views']:
-            selected=st.selectbox('Rendu à modifier',range(len(p['views'])),format_func=lambda i:p['views'][i]['title']);v=p['views'][selected]
-            st.image(str(ROOT/v['image']),width=550)
-            cams=p['cameras'];ids=[None]+[x['id'] for x in cams];names={x['id']:x['name'] for x in cams}
-            with st.form('edit_view'):
-                label=st.text_input('Titre du rendu',v['title']);cid=st.selectbox('Caméra correspondante',ids,index=ids.index(v.get('camera_id')) if v.get('camera_id') in ids else 0,format_func=lambda x:names.get(x,'Non associée · galerie seulement'))
-                order=st.number_input('Position dans le parcours',1,len(p['views']),selected+1)
-                if st.form_submit_button('Enregistrer cette vue'):
-                    v.update(title=label,camera_id=cid);p['views'].pop(selected);p['views'].insert(int(order)-1,v);save(p);st.rerun()
-            st.caption('Pour identifier une caméra, ouvrez la visite et sélectionnez son nom dans « Caméras SketchUp ». Revenez ensuite l’associer ici.')
-            confirm=st.checkbox('Confirmer le retrait de cette vue de la visite')
-            if st.button('Retirer la vue',disabled=not confirm):
-                require_admin();p['views'].pop(selected);save(p);st.rerun()
-        with st.expander('Ajouter un point de vue à une maquette GLB'):
-            st.caption('Coordonnées en mètres, axe vertical Y. Les caméras DAE sont importées automatiquement.')
-            with st.form('camera'):
-                name=st.text_input('Nom du point');pos=st.text_input('Position x,y,z','0,1.6,0');target=st.text_input('Point regardé x,y,z','0,1.6,-3')
-                if st.form_submit_button('Ajouter le point'):
-                    try:
-                        xyz=[float(x) for x in pos.split(',')];t=[float(x) for x in target.split(',')]
-                        import math
-                        if len(xyz)!=3 or len(t)!=3 or not all(math.isfinite(x) for x in xyz+t) or xyz==t:raise ValueError()
-                        p['cameras'].append({'id':uuid.uuid4().hex,'name':name or 'Point de vue','position':xyz,'target':t,'fov':50});save(p);st.rerun()
-                    except ValueError:st.error('Saisissez trois nombres finis séparés par des virgules, avec deux points distincts.')
-    with d:
-        if st.button('Préparer la sauvegarde complète'):
-            require_admin();st.session_state.backup=snapshot(ROOT)
-        if 'backup' in st.session_state:st.download_button('Télécharger le projet ZIP',st.session_state.backup,'projet_visite.zip','application/zip')
-        st.caption('Pour conserver les modifications sur GitHub : décompressez cette sauvegarde dans le dossier data/ du dépôt. Le ZIP ne contient pas le mot de passe.')
-else:
-    st.caption('PARCOURS / VISITE VIRTUELLE')
-    st.title(p['title']);st.write(p.get('subtitle',''))
-    if not (ROOT/'model.glb').exists():st.info('La maquette sera disponible après son import par l’administrateur.')
-    elif not p['views']:st.info('La maquette est disponible ; les rendus seront ajoutés par l’administrateur.')
-    if (ROOT/'model.glb').exists():
-        payload={'model':base64.b64encode((ROOT/'model.glb').read_bytes()).decode(),'cameras':p['cameras'],'views':[]}
-        for v in p['views']:
-            f=ROOT/v['image']
-            if f.exists():payload['views'].append({**v,'src':'data:image/jpeg;base64,'+base64.b64encode(f.read_bytes()).decode()})
-        html=(BASE/'viewer.html').read_text().replace('__PAYLOAD__',json.dumps(payload,ensure_ascii=False).replace('<','\\u003c'))
-        components.html(html,height=790,scrolling=True)
-        st.caption('Les rendus sont des images fixes. La maquette permet de se repérer ; elle ne reproduit pas leur éclairage photoréaliste. Les points dorés apparaissent après association des vues par l’administrateur.')
+                v=json.loads(coords);yaw=float(v['yaw']);pitch=float(v['pitch'])
+                if not math.isfinite(yaw) or not math.isfinite(pitch) or abs(pitch)>1.5:raise ValueError('Coordonnées non valides')
+                scene['links']=[l for l in scene.get('links',[]) if l['to']!=dest]+[dict(to=dest,yaw=yaw,pitch=pitch,label=label or names[dest],kind={'Passage':'walk','Monter':'up','Descendre':'down'}[kind])];save(p);st.rerun()
+            except Exception as ex:st.error(str(ex))
+    links=scene.get('links',[])
+    if links:
+        ix=st.selectbox('Passage à retirer',range(len(links)),format_func=lambda i:links[i].get('label',names.get(links[i]['to'],'Passage')))
+        if st.button('Retirer ce passage'):scene['links'].pop(ix);save(p);st.rerun()
+with c:
+    st.write('Ces images restent fixes et sont accessibles dans « Axonométries ».')
+    for g in p['gallery']:st.image(str(ROOT/g['image']),caption=g['title'],width=360)
+    with st.form('gallery'):
+        label=st.text_input('Titre de l’image');upload=st.file_uploader('Ajouter une axonométrie',type=['png','jpg','jpeg'])
+        if st.form_submit_button('Ajouter l’image'):
+            try:
+                if not upload or not label:raise ValueError('Indiquez un titre et une image.')
+                p['gallery'].append(dict(title=label,image=img_write(upload,'galerie')));save(p);st.rerun()
+            except Exception as ex:st.error(str(ex))
+with d:
+    st.write('Conservez ici le fichier SketchUp et son export DAE. L’import d’une maquette ou d’une photo simple ne génère pas automatiquement un panorama réaliste. Les panoramas préparés se chargent dans le premier onglet.')
+    source=st.file_uploader('Source du projet',type=['skp','dae'])
+    if st.button('Conserver cette source',disabled=source is None):
+        require_admin();folder=ROOT/'sources';folder.mkdir(exist_ok=True);(folder/('modele'+Path(source.name).suffix.lower())).write_bytes(source.getvalue());st.success('Source conservée. Pensez à télécharger la sauvegarde.')
+with e:
+    if st.button('Préparer les fichiers à télécharger'):
+        require_admin();st.session_state['export_html']=html(p,ROOT).encode();st.session_state['backup']=backup()
+    if 'export_html' in st.session_state:
+        st.download_button('Visite autonome HTML',st.session_state['export_html'],'Visite_interactive.html','text/html')
+        st.download_button('Sauvegarde du dossier data/',st.session_state['backup'],'data_visite.zip','application/zip')
