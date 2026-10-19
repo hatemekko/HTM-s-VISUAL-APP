@@ -74,3 +74,7 @@ Le raccord de plafond signalé au-dessus de la cuisine a été retouché. Le bou
 Les panoramas restent en 1774 × 887 pixels : la retouche n’a pas fourni de résolution native supérieure. Le flou au fort zoom 360° n’est donc pas résolu. Les vues détaillées ne sont pas de nouveaux panoramas haute résolution.
 
 Pour installer la mise à jour, remplacer app.py, pack.py, viewer.html et le dossier data/ complet dans le dépôt. Les secrets administrateur restent dans Streamlit.
+
+
+### Netteté réglable
+La visite démarre à l’accueil avec une accentuation douce de l’affichage. Le bouton Netteté permet de choisir originale, douce ou renforcée. Les neuf panoramas sources restent inchangés (1774 × 887) : aucune architecture ni mobilier n’est redessiné. Le filtre de contraste local est borné pour limiter les halos, avec raccord horizontal et atténuation aux pôles. Il ne reconstitue pas les détails absents ; le fort zoom reste limité.

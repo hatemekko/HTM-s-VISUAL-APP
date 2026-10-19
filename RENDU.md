@@ -18,3 +18,7 @@ Compléments de chaque demande :
 Les panoramas PNG sont les sorties originales, sans recadrage après génération. Les axonométries sont les images fournies (la vue générale reprend sa copie JPEG déjà intégrée à la première application).
 
 Retouche du 19 octobre — outil intégré imagegen : corriger le raccord incohérent au-dessus de la kitchenette en utilisant le panorama SketchUp comme référence géométrique, conserver les portes, vitrages, passages, mobilier et projection sphérique ; demander une sortie 3840 × 1920 nette et raccordable. La sortie réelle est 1774 × 887 ; elle est intégrée sans agrandissement artificiel.
+
+
+Correction des rubans noirs — 19 octobre 2026
+Accueil ID2 : deux rubans noirs avec spots. Salon ID3 : ruban côté vitrage. Couloir RDC ID5 : ruban longitudinal côté droit. Retouches imagegen intégrées à partir des panoramas existants et des trois nouvelles références. Consigne : conserver cadrage, architecture et mobilier, ajouter seulement les rails et améliorer subtilement la clarté. Sorties 1774 × 887 : la résolution et le flou au zoom ne sont pas résolus. Références détaillées mises à jour.
