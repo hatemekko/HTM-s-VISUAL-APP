@@ -16,3 +16,5 @@ Compléments de chaque demande :
 - Café à l’étage : conserver café, photocopieur, traceur, portes et vitrages ; meubler le bureau derrière la paroi vitrée droite.
 
 Les panoramas PNG sont les sorties originales, sans recadrage après génération. Les axonométries sont les images fournies (la vue générale reprend sa copie JPEG déjà intégrée à la première application).
+
+Retouche du 19 octobre — outil intégré imagegen : corriger le raccord incohérent au-dessus de la kitchenette en utilisant le panorama SketchUp comme référence géométrique, conserver les portes, vitrages, passages, mobilier et projection sphérique ; demander une sortie 3840 × 1920 nette et raccordable. La sortie réelle est 1774 × 887 ; elle est intégrée sans agrandissement artificiel.

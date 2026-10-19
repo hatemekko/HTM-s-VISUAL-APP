@@ -10,6 +10,7 @@ def payload(project,root,editor=False,start=None):
         return 'data:'+ (mimetypes.guess_type(f.name)[0] or 'image/jpeg')+';base64,'+base64.b64encode(f.read_bytes()).decode()
     for s in p['scenes']:
         s['src']=src(s['image'])
+        if s.get('detail_image'):s['detailSrc']=src(s['detail_image'])
         if s.get('thumbnail'):s['thumb']=src(s['thumbnail'])
     for g in p.get('gallery',[]):g['src']=src(g['image'])
     p['editor']=editor

@@ -1,6 +1,6 @@
 {
   "title": "Espaces de travail",
-  "start": "ID7",
+  "start": "ID2",
   "scenes": [
     {
       "id": "ID2",
@@ -23,7 +23,8 @@
           "label": "Bureaux & salle de réunion",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID2.jpeg"
     },
     {
       "id": "ID3",
@@ -46,7 +47,8 @@
           "label": "Cuisine & espace repas",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID3.png"
     },
     {
       "id": "ID4",
@@ -62,7 +64,8 @@
           "label": "Salon & détente",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID4.png"
     },
     {
       "id": "ID5",
@@ -85,7 +88,8 @@
           "label": "Hall · côté reprographie",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID5.png"
     },
     {
       "id": "ID6",
@@ -108,7 +112,8 @@
           "label": "Au pied de l’escalier",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID6.png"
     },
     {
       "id": "ID7",
@@ -124,7 +129,8 @@
           "label": "Au pied de l’escalier",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID7.png"
     },
     {
       "id": "ID8",
@@ -154,7 +160,8 @@
           "label": "Monter à l’étage",
           "kind": "up"
         }
-      ]
+      ],
+      "detail_image": "details/ID8.png"
     },
     {
       "id": "ID9",
@@ -177,7 +184,8 @@
           "label": "Espace café de l’étage",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID9.png"
     },
     {
       "id": "ID10",
@@ -193,7 +201,8 @@
           "label": "Palier & bureaux de l’étage",
           "kind": "walk"
         }
-      ]
+      ],
+      "detail_image": "details/ID10.png"
     }
   ],
   "gallery": [

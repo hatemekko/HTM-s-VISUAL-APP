@@ -1,6 +1,6 @@
 # Parcours — Hatem Ellouze
 
-Neuf panoramas réalistes, seize passages cliquables et deux axonométries fixes. Le départ est le hall validé, avec le meuble sous l’escalier.
+Neuf panoramas réalistes, seize passages cliquables et deux axonométries fixes. Le départ est l’accueil.
 
 ## Ouvrir la visite immédiatement
 
@@ -66,3 +66,11 @@ python pack.py Visite_interactive_Hatem.html
 ```
 
 Le HTML ne contient ni sources SketchUp ni mot de passe administrateur.
+
+## Mise à jour du 19 octobre
+
+Le raccord de plafond signalé au-dessus de la cuisine a été retouché. Le bouton « Rendu détaillé » de chaque scène ouvre le rendu de référence fourni, en image fixe, avec affichage à taille réelle. Cela permet de consulter davantage de détails sur un angle donné, sans modifier la navigation 360°.
+
+Les panoramas restent en 1774 × 887 pixels : la retouche n’a pas fourni de résolution native supérieure. Le flou au fort zoom 360° n’est donc pas résolu. Les vues détaillées ne sont pas de nouveaux panoramas haute résolution.
+
+Pour installer la mise à jour, remplacer app.py, pack.py, viewer.html et le dossier data/ complet dans le dépôt. Les secrets administrateur restent dans Streamlit.
