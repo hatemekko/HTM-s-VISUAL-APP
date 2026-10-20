@@ -1,0 +1,218 @@
+{
+  "title": "Espaces de travail",
+  "start": "ID2",
+  "scenes": [
+    {
+      "id": "ID2",
+      "title": "Accueil",
+      "image": "panoramas/ID2.png",
+      "level": "Rez-de-chaussée",
+      "heading": -3.1352867926846635,
+      "links": [
+        {
+          "to": "ID3",
+          "yaw": -0.8168140899333463,
+          "pitch": -0.3455751918948772,
+          "label": "Salon & détente",
+          "kind": "walk"
+        },
+        {
+          "to": "ID5",
+          "yaw": 0.8168140899333463,
+          "pitch": -0.3455751918948772,
+          "label": "Bureaux & salle de réunion",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID2.jpeg"
+    },
+    {
+      "id": "ID3",
+      "title": "Salon & détente",
+      "image": "panoramas/ID3.png",
+      "level": "Rez-de-chaussée",
+      "heading": 2.719214358365971,
+      "links": [
+        {
+          "to": "ID2",
+          "yaw": 1.4451326206513047,
+          "pitch": -0.5026548245743669,
+          "label": "Accueil",
+          "kind": "walk"
+        },
+        {
+          "to": "ID4",
+          "yaw": 0.34557519189487756,
+          "pitch": -0.21991148575128536,
+          "label": "Cuisine & espace repas",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID3.png"
+    },
+    {
+      "id": "ID4",
+      "title": "Cuisine & espace repas",
+      "image": "panoramas/ID4.png",
+      "level": "Rez-de-chaussée",
+      "heading": -0.1765927076806894,
+      "links": [
+        {
+          "to": "ID3",
+          "yaw": 0.03141592653589796,
+          "pitch": -0.18849555921538774,
+          "label": "Salon & détente",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID4.png"
+    },
+    {
+      "id": "ID5",
+      "title": "Bureaux & salle de réunion",
+      "image": "panoramas/ID5.png",
+      "level": "Rez-de-chaussée",
+      "heading": 2.381382316680484,
+      "links": [
+        {
+          "to": "ID2",
+          "yaw": -1.5707963267948966,
+          "pitch": -0.4398229715025711,
+          "label": "Accueil",
+          "kind": "walk"
+        },
+        {
+          "to": "ID6",
+          "yaw": 0.7225663103256523,
+          "pitch": -0.21991148575128536,
+          "label": "Hall · côté reprographie",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID5.png"
+    },
+    {
+      "id": "ID6",
+      "title": "Hall · côté reprographie",
+      "image": "panoramas/ID6.png",
+      "level": "Rez-de-chaussée",
+      "heading": -2.3313180292756925,
+      "links": [
+        {
+          "to": "ID5",
+          "yaw": 2.4504422698000385,
+          "pitch": -0.2513274122871833,
+          "label": "Bureaux & salle de réunion",
+          "kind": "walk"
+        },
+        {
+          "to": "ID8",
+          "yaw": -0.31415926535897926,
+          "pitch": -0.5026548245743669,
+          "label": "Au pied de l’escalier",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID6.png"
+    },
+    {
+      "id": "ID7",
+      "title": "Atrium · sous l’escalier",
+      "image": "panoramas/ID7.png",
+      "level": "Rez-de-chaussée",
+      "heading": -0.8070981451922501,
+      "links": [
+        {
+          "to": "ID8",
+          "yaw": 0.8168140899333463,
+          "pitch": -0.3455751918948772,
+          "label": "Au pied de l’escalier",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID7.png"
+    },
+    {
+      "id": "ID8",
+      "title": "Au pied de l’escalier",
+      "image": "panoramas/ID8.png",
+      "level": "Rez-de-chaussée",
+      "heading": -0.67736014795983,
+      "links": [
+        {
+          "to": "ID7",
+          "yaw": -2.199114857512855,
+          "pitch": -0.471238898038469,
+          "label": "Atrium · sous l’escalier",
+          "kind": "walk"
+        },
+        {
+          "to": "ID6",
+          "yaw": 0.8168140899333463,
+          "pitch": -0.2827433388230813,
+          "label": "Hall · côté reprographie",
+          "kind": "walk"
+        },
+        {
+          "to": "ID9",
+          "yaw": -0.12566370614359185,
+          "pitch": 0.0,
+          "label": "Monter à l’étage",
+          "kind": "up"
+        }
+      ],
+      "detail_image": "details/ID8.png"
+    },
+    {
+      "id": "ID9",
+      "title": "Palier & bureaux de l’étage",
+      "image": "panoramas/ID9.png",
+      "level": "Étage",
+      "heading": -0.8408723384757617,
+      "links": [
+        {
+          "to": "ID8",
+          "yaw": 0.2513274122871837,
+          "pitch": -0.37699111843077515,
+          "label": "Descendre au hall",
+          "kind": "down"
+        },
+        {
+          "to": "ID10",
+          "yaw": 2.356194490192345,
+          "pitch": -0.3455751918948772,
+          "label": "Espace café de l’étage",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID9.png"
+    },
+    {
+      "id": "ID10",
+      "title": "Espace café de l’étage",
+      "image": "panoramas/ID10.png",
+      "level": "Étage",
+      "heading": 1.1251406878656038,
+      "links": [
+        {
+          "to": "ID9",
+          "yaw": -1.7592918860102844,
+          "pitch": -0.4398229715025711,
+          "label": "Palier & bureaux de l’étage",
+          "kind": "walk"
+        }
+      ],
+      "detail_image": "details/ID10.png"
+    }
+  ],
+  "gallery": [
+    {
+      "title": "Axonométrie · organisation des espaces",
+      "image": "galerie/axonometrie_1.png"
+    },
+    {
+      "title": "Axonométrie · vue d’ensemble",
+      "image": "galerie/axonometrie_2.jpg"
+    }
+  ]
+}

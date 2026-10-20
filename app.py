@@ -3,9 +3,9 @@ import os,json,time,hmac,uuid,io,zipfile,copy,math
 import streamlit as st
 import streamlit.components.v1 as components
 from PIL import Image
-from pack import html
+from pack import html, html_streamed
 BASE=Path(__file__).parent
-ROOT=Path(os.environ.get('PROJECT_DATA_DIR',str(BASE/'data')))
+ROOT=Path(os.environ.get('PROJECT_DATA_DIR',str(BASE/'static'/'data')))
 ROOT.mkdir(parents=True,exist_ok=True)
 st.set_page_config(page_title='Parcours · Hatem Ellouze',page_icon='◈',layout='wide')
 st.markdown('<style>.block-container{padding-top:1rem;padding-bottom:0}header[data-testid="stHeader"]{background:transparent}.stApp{background:#171a14;color:#eee}h1{font-family:Georgia,serif}</style>',unsafe_allow_html=True)
@@ -33,7 +33,7 @@ with st.sidebar:
     mode=st.radio('Espace',['Visite','Administration'])
 p=read()
 if mode=='Visite':
-    components.html(html(p,ROOT),height=850,scrolling=False)
+    components.html(html_streamed(p,ROOT),height=850,scrolling=False)
     st.stop()
 st.title('Administration de la visite')
 try:pwd=os.environ.get('ADMIN_PASSWORD') or st.secrets.get('ADMIN_PASSWORD','')
@@ -75,7 +75,7 @@ with b:
     ids=[s['id'] for s in p['scenes']];names={s['id']:s['title'] for s in p['scenes']}
     origin=st.selectbox('Depuis quel panorama ?',ids,format_func=lambda x:names[x]);scene=next(s for s in p['scenes'] if s['id']==origin)
     st.write('Tournez la vue pour placer le passage au centre. Copiez les coordonnées affichées, puis choisissez la destination. Ajoutez aussi le passage de retour depuis l’autre vue.')
-    components.html(html(p,ROOT,editor=True,start=origin),height=560)
+    components.html(html_streamed(p,ROOT,editor=True,start=origin),height=560)
     with st.form('link'):
         dest=st.selectbox('Destination',[i for i in ids if i!=origin],format_func=lambda x:names[x]);coords=st.text_input('Coordonnées copiées',value='{"yaw":0,"pitch":-0.2}');label=st.text_input('Libellé du repère (facultatif)');kind=st.selectbox('Type de passage',['Passage','Monter','Descendre'])
         if st.form_submit_button('Ajouter ou remplacer ce passage'):
