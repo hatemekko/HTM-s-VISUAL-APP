@@ -1,16 +1,7 @@
-# Correction de l’erreur MessageSizeError
+# Correctif de chargement des panoramas
 
-Cette version ne transmet plus toutes les images en base64 dans un seul message Streamlit.
-Les images HD sont accessibles séparément via `/app/static/data/...`, grâce à `enableStaticServing = true`.
+La visite intègre ses images WebP directement dans le HTML de l’iframe. Cette méthode évite les URL `/app/static/` qui pouvaient être inaccessibles dans l’iframe Streamlit et réduit l’envoi bien en dessous de 200 Mo.
 
-Démarrer avec :
+Les neuf panoramas restent en 4096 × 2048 pixels. Les rendus détaillés et axonométries sont inclus. Les mêmes scènes, repères et boutons sont conservés. La compression WebP peut légèrement modifier les pixels, mais ne crée pas de nouveaux détails à partir des images agrandies.
 
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-Pour Streamlit Community Cloud, déployez **tout le dossier** avec `.streamlit/config.toml` et `static/data/`.
-La résolution des panoramas n’a pas été réduite. L’upscaling antérieur ne crée cependant pas de détails photographiques nouveaux.
-
-Le mode export HTML autonome reste disponible depuis l’administration ; ce fichier peut être très lourd car il embarque les images.
+Installation : publier l’intégralité du contenu de ce dossier à la racine du dépôt GitHub de l’application, puis redémarrer Streamlit. Le contenu du dossier `static/data/` est indispensable.
