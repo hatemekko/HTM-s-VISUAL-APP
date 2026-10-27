@@ -1,24 +1,26 @@
-# Consignes des rendus
+# Consignes de retouche V2 — par scène
 
-Outil utilisé : imagegen intégré, en édition avec références. Le hall ID7 est le rendu déjà validé. Chaque autre image utilise son panorama SketchUp comme base, son rendu fourni comme référence et le hall validé pour la cohérence des matériaux.
+Pour chaque scène : panorama SketchUp actuel en base (géométrie), référence ci‑dessous pour les matériaux et le mobilier, **Hall (Atrium_chaleureux)** pour la cohérence de palette.
 
-Consigne commune : produire un panorama photoréaliste équirectangulaire 2:1 complet et raccordable. Préserver la caméra, la projection sphérique et les positions des murs, portes, vitrages, plafonds, passages et escaliers. Ne jamais fermer un couloir ou transformer un vitrage de bureau intérieur en paysage extérieur. Employer une pierre beige polie, du chêne, des murs blancs chauds, des cadres noirs, des textures réalistes, des ombres de contact et un éclairage indirect chaud. Éviter les blancs brûlés, conserver la distorsion aux pôles et ne pas insérer de texte.
+## Consigne commune
+Panorama équirectangulaire 2:1 complet, raccord gauche/droite parfait. Sortie la plus grande possible (visez 4096 × 2048 ; si l'outil sort moins, voir « Résolution » plus bas). Ne rien déplacer : murs, portes, vitrages, escaliers, plafonds identiques. Pierre beige polie avec reflets nets, chêne clair, murs blancs chauds, cadres noirs mats, éclairage indirect chaud en gorge, spots encastrés. Pas de blancs brûlés, textures fines (veinage du chêne, grain de la pierre, trame des tissus), ombres de contact. Aucun texte, aucun logo, distorsion sphérique conservée aux pôles.
 
-Compléments de chaque demande :
+## Scènes
+| Scène | Référence | À reprendre précisément |
+|---|---|---|
+| Accueil | `Gemini_Generated_Image…jpeg` | Banque blanche avec liseré LED, 2 suspensions rondes en rotin, écrans, bureaux vitrés à cadres noirs, rails noirs à spots au plafond, olivier en vase |
+| Salon | `Salon_contemporain…` | 3 œuvres abstraites beige/brun/noir (cadres chêne), appliques linéaires, canapé modulaire lin gris‑beige, pouf rond, fauteuil taupe, suspensions en gélule, tapis chiné |
+| Cuisine | `Intérieur_moderne…cuisine_ouverte` | Kitchenette gris béton, frigo américain inox, crédence chêne, suspensions cuivre, chaises blanches pieds bois, vases blancs et vert sauge, rail noir |
+| Couloir RDC | `Couloir_de_bureau_moderne_vitré` | Salle de réunion vitrée (table chêne, sièges résille noirs, écran de projection), consoles en pierre avec vase, appliques, olivier, portes chêne, moquette dans les bureaux |
+| Hall (reprographie) | `Hall_moderne_avec_escalier_flottant` | Marches noyer sur limon inox, main courante inox, colonne chêne, traceur, fenêtre avec vue, placard chêne à poignées noires |
+| Pied de l'escalier | `Hall_moderne_avec_escalier_suspendu` | Marches noyer épaisses, balustrade inox, coin café + photocopieur, grand placard chêne, couloir vitré en fuite |
+| Palier | `Couloir_moderne_et_chandelier_sculptural` | Lustre sculptural noir/cuivre, garde‑corps métal gris, bureau meublé derrière le vitrage, baie avec paysage, plafond à pan coupé |
+| Café étage | `Couloir_de_bureau_avec_espace_café` | Portes chêne, bureau meublé derrière le vitrage (ordinateur, siège noir), machine à café, photocopieur, traceur, plafond à pan coupé éclairé |
 
-- Accueil : conserver banque d’accueil et suspensions ; reprendre ordinateurs et plante de la référence.
-- Salon : conserver canapé et tables basses ; reprendre œuvres abstraites, appliques, tapis et textures.
-- Cuisine : conserver kitchenette, tables, chaises et vitrages ; reprendre vases blancs/vert sauge, suspensions métalliques, meubles gris et crédence bois.
-- Couloir : conserver salle de réunion et bureaux vitrés ; table en chêne, sièges noirs, moquette dans les bureaux et pierre dans les circulations.
-- Hall côté reprographie : conserver escalier, traceur, café, placard et passages ; même palette que le hall validé.
-- Pied de l’escalier : conserver escalier, portes et circulations ; reprendre le meuble bas sous l’escalier lorsque visible.
-- Palier : conserver vide de l’escalier, garde-corps, suspension verticale et circulations ; meubler les bureaux visibles derrière les vitrages.
-- Café à l’étage : conserver café, photocopieur, traceur, portes et vitrages ; meubler le bureau derrière la paroi vitrée droite.
+## Résolution (cause du flou au zoom)
+Les panoramas font 1774 × 887 : à 72° de champ, l'écran affiche ~5 px par degré, alors que vos références en offrent ~18. Aucun réglage du viewer ne peut recréer ce détail. Pistes, par efficacité :
+1. **Upscale ×2 hors outil de génération** (Real‑ESRGAN, Topaz Gigapixel, Magnific) sur chaque PNG, puis re‑export en 3548 × 1774 ou 4096 × 2048.
+2. **Rendu direct depuis SketchUp** (V‑Ray, Enscape, D5, Twinmotion) en panorama 360° 4096 × 2048 : c'est la meilleure qualité, et ça garantit la géométrie.
+3. Garder « Rendu détaillé » pour les angles clés, avec les références actuelles (maintenant zoomables).
 
-Les panoramas PNG sont les sorties originales, sans recadrage après génération. Les axonométries sont les images fournies (la vue générale reprend sa copie JPEG déjà intégrée à la première application).
-
-Retouche du 19 octobre — outil intégré imagegen : corriger le raccord incohérent au-dessus de la kitchenette en utilisant le panorama SketchUp comme référence géométrique, conserver les portes, vitrages, passages, mobilier et projection sphérique ; demander une sortie 3840 × 1920 nette et raccordable. La sortie réelle est 1774 × 887 ; elle est intégrée sans agrandissement artificiel.
-
-
-Correction des rubans noirs — 19 octobre 2026
-Accueil ID2 : deux rubans noirs avec spots. Salon ID3 : ruban côté vitrage. Couloir RDC ID5 : ruban longitudinal côté droit. Retouches imagegen intégrées à partir des panoramas existants et des trois nouvelles références. Consigne : conserver cadrage, architecture et mobilier, ajouter seulement les rails et améliorer subtilement la clarté. Sorties 1774 × 887 : la résolution et le flou au zoom ne sont pas résolus. Références détaillées mises à jour.
+Après remplacement des images dans `data/`, relancer : `python pack.py Visite_interactive_Hatem.html`.
